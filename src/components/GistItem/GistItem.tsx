@@ -1,0 +1,70 @@
+import React, { memo } from 'react';
+import { Image, View, Text, StyleSheet } from 'react-native';
+
+type GistItemProps = {
+  id: string;
+  avatarUrl: string;
+  filename: string;
+};
+
+const GistItem: React.FC<GistItemProps> = ({ avatarUrl, filename }) => {
+  return (
+    <View style={styles.container}>
+      <View style={styles.avatarContainer}>
+        <Image
+          source={{
+            uri: avatarUrl,
+            cache: 'force-cache',
+          }}
+          resizeMethod="resize"
+          style={styles.avatar}
+        />
+      </View>
+
+      <View style={styles.infoContainer}>
+        <Text numberOfLines={1} style={styles.filename}>
+          {filename}
+        </Text>
+      </View>
+    </View>
+  );
+};
+
+export const GistItemMemoized = memo(GistItem);
+GistItemMemoized.displayName = 'GistItem';
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'flex-start',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E3E3E3',
+  },
+
+  avatarContainer: {
+    width: 64,
+    height: 64,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+  },
+
+  avatar: {
+    width: 48,
+    height: 48,
+  },
+
+  infoContainer: {
+    flex: 1,
+    paddingVertical: 8,
+    paddingHorizontal: 24,
+  },
+
+  filename: {
+    fontSize: 18,
+  },
+});
+
+export const ITEM_HEIGHT =
+  styles.avatarContainer.height + styles.container.borderBottomWidth;

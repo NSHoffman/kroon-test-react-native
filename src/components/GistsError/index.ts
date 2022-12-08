@@ -1,0 +1,1 @@
+export { GistsError } from './GistsError';
