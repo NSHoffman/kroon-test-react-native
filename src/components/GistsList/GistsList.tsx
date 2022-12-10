@@ -10,13 +10,15 @@ import {
 import { TouchableHighlight } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 
-import { BaseGistDTO } from '../../api/Github';
-import { GistItem, ITEM_HEIGHT } from '../GistItem';
-import { useModal } from '../../hooks';
-import { MODALS } from '../../constants';
+import { GistItem, GistsError, ITEM_HEIGHT } from '@kroon-test/components';
+import { useModal } from '@kroon-test/hooks';
+import { BaseGistDTO } from '@kroon-test/api/Github';
+import { MODALS } from '@kroon-test/constants';
 
 type GistsListProps = {
   data: Array<BaseGistDTO>;
+  error: unknown;
+  isLoading: boolean;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
@@ -24,6 +26,8 @@ type GistsListProps = {
 
 export const GistsList: React.FC<GistsListProps> = ({
   data,
+  error,
+  isLoading,
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
@@ -73,24 +77,34 @@ export const GistsList: React.FC<GistsListProps> = ({
   }, [isFetchingNextPage]);
 
   const onEndReached = useCallback(() => {
-    if (!isFetchingNextPage && hasNextPage) {
+    if (!isFetchingNextPage && hasNextPage && !error) {
       fetchNextPage();
     }
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [error, fetchNextPage, hasNextPage, isFetchingNextPage]);
+
+  if (error) {
+    return <GistsError message={(error as Error)?.message} />;
+  }
 
   return (
     <SafeAreaView style={styles.listContainer}>
-      <FlashList
-        data={data}
-        renderItem={renderGistItem}
-        estimatedItemSize={ITEM_HEIGHT}
-        keyExtractor={gistKeyExtractor}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={0.1}
-        ListHeaderComponent={renderListHeader}
-        ListFooterComponent={renderListLoadingFooter}
-        ListEmptyComponent={GistsListEmpty}
-      />
+      {isLoading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <FlashList
+          data={data}
+          renderItem={renderGistItem}
+          estimatedItemSize={ITEM_HEIGHT}
+          keyExtractor={gistKeyExtractor}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={0.1}
+          ListHeaderComponent={renderListHeader}
+          ListFooterComponent={renderListLoadingFooter}
+          ListEmptyComponent={GistsListEmpty}
+        />
+      )}
     </SafeAreaView>
   );
 };
@@ -106,6 +120,14 @@ const GistsListEmpty: React.FC = () => (
 );
 
 const styles = StyleSheet.create({
+  loaderContainer: {
+    flex: 1,
+    height: '100%',
+    width: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+
   listContainer: {
     height: Dimensions.get('window').height,
   },

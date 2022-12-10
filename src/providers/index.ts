@@ -1,1 +1,1 @@
-export { ModalsProvider } from './ModalsProvider';
+export * from './ModalsProvider';

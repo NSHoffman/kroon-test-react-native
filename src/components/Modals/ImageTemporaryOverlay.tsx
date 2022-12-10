@@ -7,8 +7,8 @@ import {
   Dimensions,
 } from 'react-native';
 
-import { MODALS } from '../../constants';
-import { useFadingComponentState, useModal } from '../../hooks';
+import { useFadingComponentState, useModal } from '@kroon-test/hooks';
+import { MODALS } from '@kroon-test/constants';
 
 type ImageTemporaryOverlayProps = {
   displayTime: number;
