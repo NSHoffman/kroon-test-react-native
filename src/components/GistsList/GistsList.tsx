@@ -1,32 +1,35 @@
 import React, { useMemo, useCallback } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  ActivityIndicator,
-  Dimensions,
-  SafeAreaView,
-} from 'react-native';
+import { View, Text, ActivityIndicator, SafeAreaView } from 'react-native';
 import { TouchableHighlight } from 'react-native';
 import { FlashList } from '@shopify/flash-list';
 
-import { BaseGistDTO } from '../../api/Github';
-import { GistItem, ITEM_HEIGHT } from '../GistItem';
-import { useModal } from '../../hooks';
-import { MODALS } from '../../constants';
+import { GistItem, GistsError, ITEM_HEIGHT } from '@kroon-test/components';
+import { useModal } from '@kroon-test/hooks';
+import { BaseGistDTO } from '@kroon-test/api/Github';
+import { MODALS } from '@kroon-test/constants';
+
+import styles from './GistsList.styles';
 
 type GistsListProps = {
   data: Array<BaseGistDTO>;
+  error: unknown;
+  isLoading: boolean;
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
+
   fetchNextPage: () => void;
+  discardError: () => void;
 };
 
 export const GistsList: React.FC<GistsListProps> = ({
   data,
+  error,
+  isLoading,
   hasNextPage,
   isFetchingNextPage,
+
   fetchNextPage,
+  discardError,
 }) => {
   const { open } = useModal();
 
@@ -73,24 +76,38 @@ export const GistsList: React.FC<GistsListProps> = ({
   }, [isFetchingNextPage]);
 
   const onEndReached = useCallback(() => {
-    if (!isFetchingNextPage && hasNextPage) {
+    if (!isFetchingNextPage && hasNextPage && !error) {
       fetchNextPage();
     }
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
+  }, [error, fetchNextPage, hasNextPage, isFetchingNextPage]);
 
   return (
     <SafeAreaView style={styles.listContainer}>
-      <FlashList
-        data={data}
-        renderItem={renderGistItem}
-        estimatedItemSize={ITEM_HEIGHT}
-        keyExtractor={gistKeyExtractor}
-        onEndReached={onEndReached}
-        onEndReachedThreshold={0.1}
-        ListHeaderComponent={renderListHeader}
-        ListFooterComponent={renderListLoadingFooter}
-        ListEmptyComponent={GistsListEmpty}
-      />
+      {isLoading ? (
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" />
+        </View>
+      ) : (
+        <React.Fragment>
+          <FlashList
+            data={data}
+            renderItem={renderGistItem}
+            estimatedItemSize={ITEM_HEIGHT}
+            keyExtractor={gistKeyExtractor}
+            onEndReached={onEndReached}
+            onEndReachedThreshold={0.1}
+            ListHeaderComponent={renderListHeader}
+            ListFooterComponent={renderListLoadingFooter}
+            ListEmptyComponent={GistsListEmpty}
+          />
+
+          <GistsError
+            hasError={!!error}
+            message={(error as Error)?.message}
+            discard={discardError}
+          />
+        </React.Fragment>
+      )}
     </SafeAreaView>
   );
 };
@@ -104,40 +121,3 @@ const GistsListEmpty: React.FC = () => (
     </Text>
   </View>
 );
-
-const styles = StyleSheet.create({
-  listContainer: {
-    height: Dimensions.get('window').height,
-  },
-
-  listEmptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    minHeight: 200,
-  },
-
-  listEmptyText: {
-    fontSize: 14,
-    color: '#939393',
-  },
-
-  listHeader: {
-    flex: 1,
-    backgroundColor: '#E3E3E3',
-    paddingVertical: 4,
-    paddingHorizontal: 16,
-  },
-
-  listHeaderText: {
-    fontSize: 16,
-    fontWeight: '800',
-  },
-
-  listFooter: {
-    flex: 1,
-    padding: 16,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});

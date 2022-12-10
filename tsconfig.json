@@ -5,6 +5,30 @@
     /* Visit https://aka.ms/tsconfig.json to read more about this file */
 
     /* Completeness */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
-  }
+    "skipLibCheck": true,                                /* Skip type checking all .d.ts files. */
+    "baseUrl": "src",
+    "paths": {
+      "@kroon-test/components": ["components"],
+      "@kroon-test/components/*": ["components/*"],
+
+      "@kroon-test/api": ["api"],
+      "@kroon-test/api/*": ["api/*"],
+
+      "@kroon-test/hooks": ["hooks"],
+      "@kroon-test/hooks/*": ["hooks/*"],
+
+      "@kroon-test/providers": ["providers"],
+      "@kroon-test/providers/*": ["providers/*"],
+
+      "@kroon-test/utils": ["utils"],
+      "@kroon-test/utils/*": ["utils/*"],
+
+      "@kroon-test/constants": ["constants"],
+      "@kroon-test/constants/*": ["constants/*"],
+
+      "@kroon-test/screens": ["screens"],
+      "@kroon-test/screens/*": ["screens/*"]
+    }
+  },
+  "include": ["./src"]
 }

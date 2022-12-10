@@ -29,7 +29,15 @@ module.exports = {
       'error',
       {
         groups: ['builtin', 'external', 'internal', ['parent', 'sibling', 'index']],
+        pathGroups: [
+          {
+            pattern: '@kroon-test/**',
+            group: 'external',
+            position: 'after',
+          }
+        ],
         'newlines-between': 'always',
+        pathGroupsExcludedImportTypes: ["internal"],
       },
     ],
   },

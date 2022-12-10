@@ -1,8 +1,12 @@
 import { useState, useEffect, useCallback } from 'react';
 
-import { BaseGistDTO, getGists, GistsConfig } from '../api/Github';
-import { createGetGistsQueryParams } from '../api/Github/utils';
-import { filterUniqueById } from '../utils';
+import {
+  BaseGistDTO,
+  getGists,
+  GistsConfig,
+  createGetGistsQueryParams,
+} from '@kroon-test/api/Github';
+import { filterUniqueById } from '@kroon-test/utils';
 
 type UseGistsInput = {
   per_page?: number;
@@ -14,9 +18,10 @@ type UseGistsOutput = {
   error: unknown;
   isLoading: boolean;
   isFetchingNextPage: boolean;
-  hasNextPage: boolean | undefined;
+  hasNextPage: boolean;
 
   fetchNextPage: () => void;
+  discardError: () => void;
 };
 
 export const useGists = (args: UseGistsInput = {}): UseGistsOutput => {
@@ -60,6 +65,8 @@ export const useGists = (args: UseGistsInput = {}): UseGistsOutput => {
     }
   }, [args.since, gistsPerPage, page]);
 
+  const discardError = useCallback(() => setError(null), []);
+
   useEffect(() => {
     fetchNextPage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,5 +79,6 @@ export const useGists = (args: UseGistsInput = {}): UseGistsOutput => {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
+    discardError,
   };
 };

@@ -1,4 +1,4 @@
 export { useGists } from './useGists';
-export { useFadeAnim } from './useFadeAnim';
-export { useFadingComponentState } from './useFadingComponentState';
 export { useModal } from './useModal';
+export { useTransition } from './useTransition';
+export { useShowHideTransition } from './useShowHideTransition';
