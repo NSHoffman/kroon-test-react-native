@@ -21,6 +21,7 @@ type UseGistsOutput = {
   hasNextPage: boolean;
 
   fetchNextPage: () => void;
+  discardError: () => void;
 };
 
 export const useGists = (args: UseGistsInput = {}): UseGistsOutput => {
@@ -64,6 +65,8 @@ export const useGists = (args: UseGistsInput = {}): UseGistsOutput => {
     }
   }, [args.since, gistsPerPage, page]);
 
+  const discardError = useCallback(() => setError(null), []);
+
   useEffect(() => {
     fetchNextPage();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -76,5 +79,6 @@ export const useGists = (args: UseGistsInput = {}): UseGistsOutput => {
     isFetchingNextPage,
     hasNextPage,
     fetchNextPage,
+    discardError,
   };
 };

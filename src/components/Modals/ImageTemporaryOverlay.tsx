@@ -1,14 +1,10 @@
 import React from 'react';
-import {
-  View,
-  StyleSheet,
-  Image,
-  Animated,
-  Dimensions,
-} from 'react-native';
+import { View, Image, Animated } from 'react-native';
 
-import { useFadingComponentState, useModal } from '@kroon-test/hooks';
+import { useShowHideTransition, useModal } from '@kroon-test/hooks';
 import { MODALS } from '@kroon-test/constants';
+
+import styles from './ImageTemporaryOverlay.styles';
 
 type ImageTemporaryOverlayProps = {
   displayTime: number;
@@ -27,10 +23,18 @@ export const ImageTemporaryOverlay: React.FC<
   const modalArgs = modalState.args as ImageTemporaryOverlayModalArgs;
   const uri = modalArgs.src;
 
-  const { opacity, shouldRender } = useFadingComponentState({
-    displayTime,
+  const { value: opacity, shouldRender } = useShowHideTransition({
+    from: 0,
+    to: 1,
     shouldShow: modalState.isOpen,
-    handleHide: () => close(MODALS.IMAGE_TEMPORARY_OVERLAY),
+    handleHide: () => {
+      const timerId = setTimeout(
+        () => close(MODALS.IMAGE_TEMPORARY_OVERLAY),
+        displayTime,
+      );
+
+      return () => clearTimeout(timerId);
+    },
   });
 
   if (!shouldRender || !uri) {
@@ -45,27 +49,3 @@ export const ImageTemporaryOverlay: React.FC<
     </Animated.View>
   );
 };
-
-const styles = StyleSheet.create({
-  overlayContainer: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    zIndex: 10,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-  },
-
-  imageContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-
-  image: {
-    width: 350,
-    height: 350,
-  },
-});

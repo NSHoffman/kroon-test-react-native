@@ -13,6 +13,7 @@ export const Main = () => {
     isLoading,
     isFetchingNextPage,
     hasNextPage,
+    discardError,
   } = useGists();
 
   return (
@@ -25,6 +26,7 @@ export const Main = () => {
         hasNextPage={hasNextPage}
         isFetchingNextPage={isFetchingNextPage}
         fetchNextPage={fetchNextPage}
+        discardError={discardError}
       />
 
       <ImageTemporaryOverlay displayTime={1000} />
