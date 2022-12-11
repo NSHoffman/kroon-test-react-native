@@ -2,7 +2,7 @@ import React from 'react';
 import { SafeAreaView, StatusBar } from 'react-native';
 
 import { GistsList } from '@kroon-test/components';
-import { ImageTemporaryOverlay } from '@kroon-test/components/Modals';
+import { ImageTemporaryOverlay } from '@kroon-test/components/modals';
 import { useGists } from '@kroon-test/hooks';
 
 export const Main = () => {
