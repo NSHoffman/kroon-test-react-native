@@ -18,7 +18,7 @@ export const GistsError: React.FC<GistErrorProps> = ({
   discard,
 }) => {
   const { shouldRender, value: translateY } = useShowHideTransition({
-    from: 32,
+    from: 100,
     to: 0,
     duration: 150,
     shouldShow: hasError,

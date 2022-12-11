@@ -88,26 +88,24 @@ export const GistsList: React.FC<GistsListProps> = ({
           <ActivityIndicator size="large" />
         </View>
       ) : (
-        <React.Fragment>
-          <FlashList
-            data={data}
-            renderItem={renderGistItem}
-            estimatedItemSize={ITEM_HEIGHT}
-            keyExtractor={gistKeyExtractor}
-            onEndReached={onEndReached}
-            onEndReachedThreshold={0.1}
-            ListHeaderComponent={renderListHeader}
-            ListFooterComponent={renderListLoadingFooter}
-            ListEmptyComponent={GistsListEmpty}
-          />
-
-          <GistsError
-            hasError={!!error}
-            message={(error as Error)?.message}
-            discard={discardError}
-          />
-        </React.Fragment>
+        <FlashList
+          data={data}
+          renderItem={renderGistItem}
+          estimatedItemSize={ITEM_HEIGHT}
+          keyExtractor={gistKeyExtractor}
+          onEndReached={onEndReached}
+          onEndReachedThreshold={0.1}
+          ListHeaderComponent={renderListHeader}
+          ListFooterComponent={renderListLoadingFooter}
+          ListEmptyComponent={GistsListEmpty}
+        />
       )}
+
+      <GistsError
+        hasError={!!error}
+        message={(error as Error)?.message}
+        discard={discardError}
+      />
     </SafeAreaView>
   );
 };

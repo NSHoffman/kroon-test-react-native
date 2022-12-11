@@ -26,7 +26,7 @@ type UseTransitionOutput = {
 const INITIAL_TRANSITION_STATE: TransitionState = {
   isTransitionIn: false,
   isTransitionOut: false,
-  isIn: false,
+  isIn: true,
   isOut: false,
 };
 
@@ -35,7 +35,7 @@ export const useTransition = ({
   to,
   duration = 500,
 }: UseTransitionInput): UseTransitionOutput => {
-  const { current: value } = useRef(new Animated.Value(0));
+  const { current: value } = useRef(new Animated.Value(from));
   const [state, setState] = useState<TransitionState>(
     INITIAL_TRANSITION_STATE,
   );
@@ -43,6 +43,7 @@ export const useTransition = ({
   const transitionIn = useCallback(() => {
     setState(() => ({
       ...INITIAL_TRANSITION_STATE,
+      isIn: false,
       isTransitionIn: true,
     }));
 
@@ -62,6 +63,7 @@ export const useTransition = ({
   const transitionOut = useCallback(() => {
     setState(() => ({
       ...INITIAL_TRANSITION_STATE,
+      isIn: false,
       isTransitionOut: true,
     }));
 
